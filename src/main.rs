@@ -1,5 +1,5 @@
 extern crate image;
-use argparse::{ArgumentParser, Store, List};
+use argparse::{ArgumentParser, Store, Collect};
 
 
 //Struct for storing arguments
@@ -32,7 +32,7 @@ fn main() {
     parser.refer(&mut options.height)
         .add_option(&["-H","--height"], Store, "Set height (default 768)");
     parser.refer(&mut options.images)
-        .add_option(&["-i","--images"], List, "Set image list");
+        .add_argument("--images", Collect, "Set image list");
 
     parser.parse_args_or_exit();
     }
