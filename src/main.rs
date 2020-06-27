@@ -1,3 +1,4 @@
+extern crate image;
 use argparse::{ArgumentParser, Store, List};
 
 
@@ -16,7 +17,7 @@ impl Options {
 
 fn resize_from_filename(filename: String, width: u32, height: u32) {
     let image = image::open(&filename).expect("Failed read"); //TODO Actually handle errors
-    let image = image.resize_to_fill(width,height,image::imageops::FilterType::Nearest);
+    let image = image.resize_to_fill(width,height,image::imageops::FilterType::Lanczos3);
     image.save(format!("1366{}",filename)).expect("Failed to write");
 }
 
