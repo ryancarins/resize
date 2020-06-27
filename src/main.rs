@@ -1,6 +1,18 @@
-use image::GenericImageView;
-use std::env;
 use argparse::{ArgumentParser, Store, List};
+
+
+//Struct for storing arguments
+struct Options {
+    width: u32,
+    height: u32,
+    images: Vec<String>,
+}
+
+impl Options {
+    fn new(width: u32, height: u32, images: Vec<String>) -> Options {
+        Options{width, height, images}
+    }
+}
 
 fn resize_from_filename(filename: String, width: u32, height: u32) {
     let image = image::open(&filename).expect("Failed read"); //TODO Actually handle errors
@@ -9,23 +21,22 @@ fn resize_from_filename(filename: String, width: u32, height: u32) {
 }
 
 fn main() {
-    //Variables for parsing
-    let mut width = 1366;
-    let mut height = 768;
-    let mut images: Vec<String> = Vec::new();
+    let mut options = Options::new(1366, 768, Vec::new());
+
     {
-    let mut parser = argparse::ArgumentParser::new();
+    let mut parser = ArgumentParser::new();
     parser.set_description("Bulk image resizer");
-    parser.refer(&mut width).add_option(&["-W","--width"], Store, "Set width (default 1366)");
-    parser.refer(&mut height).add_option(&["-H","--height"], Store, "Set height (default 768)");
-    parser.refer(&mut images).add_option(&["-i","--images"], List, "Set image list");
+    parser.refer(&mut options.width)
+        .add_option(&["-W","--width"], Store, "Set width (default 1366)");
+    parser.refer(&mut options.height)
+        .add_option(&["-H","--height"], Store, "Set height (default 768)");
+    parser.refer(&mut options.images)
+        .add_option(&["-i","--images"], List, "Set image list");
 
     parser.parse_args_or_exit();
     }
 
-
-    //let args: Vec<String> = env::args().collect();
-    for image in images {
-        resize_from_filename(image,width,height);
+    for image in options.images {
+        resize_from_filename(image,options.width,options.height);
     }
 }
