@@ -1,5 +1,6 @@
 extern crate image;
 use image::{DynamicImage, GenericImage, GenericImageView};
+use std::process;
 
 //Struct for storing arguments
 pub struct Options {
@@ -31,7 +32,23 @@ fn resize_bars(
         return image;
     }
 
-    let mut resized_image = DynamicImage::new_rgb8(width, height);
+    let mut resized_image = match image.color() {
+        image::ColorType::Rgb8 => DynamicImage::new_rgb8(width, height),
+        image::ColorType::Rgb16 => DynamicImage::new_rgb16(width, height),
+        image::ColorType::Rgba8 => DynamicImage::new_rgba8(width, height),
+        image::ColorType::Rgba16 => DynamicImage::new_rgba16(width, height),
+        image::ColorType::Bgr8 => DynamicImage::new_bgr8(width, height),
+        image::ColorType::Bgra8 => DynamicImage::new_bgra8(width, height),
+        image::ColorType::L8 => DynamicImage::new_luma8(width, height),
+        image::ColorType::La8 => DynamicImage::new_luma8(width, height),
+        image::ColorType::L16 => DynamicImage::new_luma16(width, height),
+        image::ColorType::La16 => DynamicImage::new_luma16(width, height),
+        _ => {
+            eprintln!("Image type error");
+            process::exit(1);
+        }
+    };
+
     if image.width() == width {
         resized_image
             .copy_from(&image, 0, (height - image.height()) / 2)
