@@ -18,13 +18,28 @@ impl Options {
     }
 }
 
-fn resize_bars(image: DynamicImage, width: u32, height: u32, filter: image::imageops::FilterType) -> image::DynamicImage{
-    let image = image.resize(width,height,filter);
-    let mut resized_image = DynamicImage::new_rgb8(width,height);
+fn resize_bars(
+    image: DynamicImage,
+    width: u32,
+    height: u32,
+    filter: image::imageops::FilterType,
+) -> image::DynamicImage {
+    let image = image.resize(width, height, filter);
+
+    if width as f32 / height as f32 == image.width() as f32 / image.height() as f32 {
+        //Same aspect ratio
+        return image;
+    }
+
+    let mut resized_image = DynamicImage::new_rgb8(width, height);
     if image.width() == width {
-        resized_image.copy_from(&image, 0, (height-image.height())/2).expect("Failed to copy");
-    }else{
-        resized_image.copy_from(&image, (width-image.width())/2, 0).expect("Failed to copy");
+        resized_image
+            .copy_from(&image, 0, (height - image.height()) / 2)
+            .expect("Failed to copy");
+    } else {
+        resized_image
+            .copy_from(&image, (width - image.width()) / 2, 0)
+            .expect("Failed to copy");
     }
 
     resized_image

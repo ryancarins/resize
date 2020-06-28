@@ -1,6 +1,6 @@
 use argparse::{ArgumentParser, Collect, Store};
-use std::process;
 use resize::Options;
+use std::process;
 
 fn main() {
     let default_width = 1366;
