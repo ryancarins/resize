@@ -1,31 +1,6 @@
-extern crate image;
 use argparse::{ArgumentParser, Collect, Store};
 use std::process;
-
-//Struct for storing arguments
-struct Options {
-    width: u32,
-    height: u32,
-    images: Vec<String>,
-}
-
-impl Options {
-    fn new(width: u32, height: u32, images: Vec<String>) -> Options {
-        Options {
-            width,
-            height,
-            images,
-        }
-    }
-}
-
-fn resize_from_filename(filename: String, width: u32, height: u32) {
-    let image = image::open(&filename).expect("Failed read"); //TODO Actually handle errors
-    let image = image.resize_to_fill(width, height, image::imageops::FilterType::Lanczos3);
-    image
-        .save(format!("1366{}", filename))
-        .expect("Failed to write");
-}
+use resize::Options;
 
 fn main() {
     let default_width = 1366;
@@ -62,6 +37,6 @@ fn main() {
     }
 
     for image in options.images {
-        resize_from_filename(image, options.width, options.height);
+        resize::resize_from_filename(image, options.width, options.height);
     }
 }
